@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # $File: info.py
-# $Date: Fri Dec 14 22:04:07 2012 +0800
+# $Date: Wed Feb 27 20:00:29 2013 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 import gevent
@@ -10,7 +10,7 @@ from coursey.utils import fetch_page, Parser, print_table
 
 @command('info')
 def get_course_info(csid_fin):
-    """given the path to the file containing the ids, return course info"""
+    """search for ren xuan ke; Arg: the path to the file containing the ids"""
     with open(csid_fin) as fin:
         csid = [i.strip() for i in fin.readlines()]
         csid = filter(lambda i: i, csid)

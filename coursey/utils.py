@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # $File: utils.py
-# $Date: Fri Dec 14 22:11:29 2012 +0800
+# $Date: Wed Feb 27 20:27:14 2013 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
+
+from coursey.config import URL, WEBPAGE_ENCODING, SEMESTER
 
 import urllib
 import urllib2
@@ -9,14 +11,14 @@ import os
 import re
 import json
 import unicodedata
-from coursey.config import URL, WEBPAGE_ENCODING, SEMESTER
+import sys
 
 cookie = os.getenv('coursey_cookie')
 
 if not cookie:
     raise ValueError('Please set the coursey_cookie environment variable')
 
-def fetch_page(data, is_post = True):
+def fetch_page(data = {}, is_post = True):
     data['p_xnxq'] = SEMESTER
     data = urllib.urlencode(data)
     if is_post:
@@ -41,13 +43,21 @@ class Parser(object):
             raise RuntimeError('login timed out')
         self.lines = webpage.split('\n')
 
-    def get_input_val(self, name):
-        r = re.compile(r"""<input.*name=['"]{}['"].*value=['"]([^'"]*)['"]""".
-                format(name))
-        for l in lines:
+    def _re_line_match(self, regex):
+        r = re.compile(regex)
+        for l in self.lines:
             m = r.search(l)
             if m:
                 return m.group(1)
+        raise RuntimeError('value of input {} not found'.format(name))
+
+    def get_input_val(self, name):
+        return self._re_line_match(
+                r"""<input.*name=['"]{}['"].*value=['"]([^'"]*)['"]""".
+                format(name))
+
+    def get_func_arg(self, name):
+        return self._re_line_match(r"""{0}\(([^)].*)\)""".format(name))
 
     def get_js_var(self, name):
         rstart = re.compile(r"""var.*{}.*=.*\[""".format(name))
@@ -63,7 +73,7 @@ class Parser(object):
                 end = i
                 break
         if start is None or end is None:
-            return
+            raise RuntimeError('value of js var {} not found'.format(name))
 
         data = ''.join(self.lines[start:end + 1])
         data = data[data.find('=') + 1:]
@@ -73,6 +83,10 @@ class Parser(object):
 
 
 def print_table(rows):
+    if not sys.stdout.isatty():
+        for r in rows:
+            print u','.join(r).encode('utf-8')
+        return
     def get_len(s):
         if isinstance(s, str):
             return len(s)
@@ -90,8 +104,6 @@ def print_table(rows):
         for i in zip(r, lens):
             l = get_len(i[0])
             m = i[0]
-            if isinstance(m, unicode):
-                m = m.encode('utf-8')
             p.append(m + ' ' * (i[1] - l))
         print sep.join(p)
 
