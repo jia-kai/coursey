@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # $File: main.py
-# $Date: Wed Feb 27 19:34:06 2013 +0800
+# $Date: Mon Mar 04 23:52:05 2013 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
+
+from gevent import monkey
+monkey.patch_all()
 
 from coursey.cmd import command
 
