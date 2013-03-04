@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # $File: __init__.py
-# $Date: Fri Dec 14 17:13:14 2012 +0800
+# $Date: Mon Mar 04 23:27:56 2013 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 from pkgutil import walk_packages
@@ -21,6 +21,8 @@ class command(object):
         self.func = func
         if self.doc is None:
             self.doc = func.__doc__
+
+        return func
 
     def invoke(self, *args, **kargs):
         return self.func(*args, **kargs)
