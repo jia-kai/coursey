@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # $File: select.py
-# $Date: Mon Mar 04 23:41:26 2013 +0800
+# $Date: Tue Mar 05 13:01:35 2013 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 
@@ -47,6 +47,9 @@ def try_select(*args):
     assert args and len(args) % 2 == 0
     courses = [(args[i], args[i + 1]) for i in range(0, len(args), 2)]
 
+    for i in courses:
+        select('rx', i[0], i[1])
+
     while True:
         if not courses:
             print 'done, press anykey to exit'
@@ -78,7 +81,7 @@ def try_select(*args):
             del courses[i]
 
 
-        time.sleep(SLEEP_TIME + (random() - 0.5) * SLEEP_DELTA)
+        time.sleep(SLEEP_TIME + 2 * (random() - 0.5) * SLEEP_DELTA)
 
 
 def _get_remains(courses):
