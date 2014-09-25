@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # $File: select.py
-# $Date: Tue Mar 05 13:01:35 2013 +0800
+# $Date: Thu Sep 25 20:12:33 2014 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 
-from coursey.config import SEMESTER, WEBPAGE_ENCODING, SLEEP_TIME, SLEEP_DELTA
+from coursey.config import (
+    SEMESTER, WEBPAGE_ENCODING, SLEEP_TIME, SLEEP_DELTA,
+    SELECT_MULTICOURSE_SLEEP)
 from coursey.cmd import command
 from coursey.cmd.info import get_course_info
 from coursey.utils import fetch_page, Parser
@@ -37,7 +39,7 @@ def select(type, csid, csnum):
         'token': token
         }))
     rst = rst.get_func_arg('showMsg')
-    print rst
+    print 'showMsg:', rst
     return rst
 
 
@@ -49,6 +51,7 @@ def try_select(*args):
 
     for i in courses:
         select('rx', i[0], i[1])
+        time.sleep(SELECT_MULTICOURSE_SLEEP)
 
     while True:
         if not courses:
