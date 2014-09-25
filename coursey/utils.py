@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # $File: utils.py
-# $Date: Wed Feb 27 20:27:14 2013 +0800
+# $Date: Thu Sep 25 08:44:39 2014 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 from coursey.config import URL, WEBPAGE_ENCODING, SEMESTER
@@ -41,7 +41,7 @@ class Parser(object):
         webpage = webpage.decode(WEBPAGE_ENCODING)
         if u'用户登录超时' in webpage:
             raise RuntimeError('login timed out')
-        self.lines = webpage.split('\n')
+        self.lines = webpage.replace('\r', '').split('\n')
 
     def _re_line_match(self, regex):
         r = re.compile(regex)
@@ -75,7 +75,12 @@ class Parser(object):
         if start is None or end is None:
             raise RuntimeError('value of js var {} not found'.format(name))
 
-        data = ''.join(self.lines[start:end + 1])
+        data = u''
+        for line in self.lines[start:end + 1]:
+            p = line.rfind('//')
+            if p != -1:
+                line = line[:p]
+            data += line
         data = data[data.find('=') + 1:]
         data = data[:data.rfind(';')]
 
