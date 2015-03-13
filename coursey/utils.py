@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # $File: utils.py
-# $Date: Thu Sep 25 08:44:39 2014 +0800
+# $Date: Sun Mar 08 14:03:36 2015 +0800
 # $Author: jiakai <jia.kai66@gmail.com>
 
 from coursey.config import URL, WEBPAGE_ENCODING, SEMESTER
@@ -49,7 +49,7 @@ class Parser(object):
             m = r.search(l)
             if m:
                 return m.group(1)
-        raise RuntimeError('value of input {} not found'.format(name))
+        raise RuntimeError('value of input {} not found'.format(regex))
 
     def get_input_val(self, name):
         return self._re_line_match(
