@@ -1,0 +1,1 @@
+help selecting a course in THU
